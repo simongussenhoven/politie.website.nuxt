@@ -12,13 +12,13 @@
         <MenubarSeparator />
         <MenubarItem>Print</MenubarItem>
       </MenubarContent>
-      <PSearch/>
+      <PSearch v-model="newsStore.query"/>
     </MenubarMenu>
   </Menubar>
 </template>
 
 <script setup lang="ts">
-
+import { useNewsStore } from '@/stores/newsStore'
 import {
   Menubar,
   MenubarContent,
@@ -28,5 +28,7 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from '@/components/ui/menubar'
+
+const newsStore = useNewsStore()
 </script>
 

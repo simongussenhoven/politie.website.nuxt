@@ -4,12 +4,24 @@ import { defineStore } from 'pinia'
 // https://api.politie.nl/v4/nieuws?language=nl&query=drie%20personen&radius=5.0&maxnumberofitems=10&offset=0
 
 export const useNewsStore = defineStore('news', () => {
-  const query = ref('Amsterdam')
+  const query = ref('Winsum')
   const iterator = ref({}) as any
   const newsItems = ref([])
   const radius = ref(5.0)
   const maxNumberOfItems = ref(10)
   const isLoading = ref(false)
+  const debounce = _debounce(() => {
+    console.log("DEBOUNCEEED!")
+    console.log(query.value)
+    iterator.value = {}
+    newsItems.value = []
+    getNews()
+  }, 1750)
+  watch(query, () => {
+    debounce.cancel()
+    debounce()
+    
+  })
 
   const getNews = async () => {
     if (iterator.value.last) return

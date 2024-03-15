@@ -1,5 +1,5 @@
-import Default from '@/assets/img/default.png'
+import Default from '/assets/img/default.png'
 
 export const getImage = (url: string) => {
-    return url ? url : Default
+    return url && url !== '' ? url : Default
 }

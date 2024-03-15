@@ -1,6 +1,9 @@
 <template>
-  <Card>
-    <CardHeader>
+  <Card class="flex flex-col md:flex-row">
+    <slot name="image">
+    </slot>
+    <div class="flex-col">
+      <CardHeader>
       <CardTitle>
         <slot name="title"></slot>
       </CardTitle>
@@ -14,6 +17,7 @@
     <CardFooter>
       <slot name="footer"></slot>
     </CardFooter>
+    </div>
   </Card>
 </template>
 <script setup lang="ts">
