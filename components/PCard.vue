@@ -1,7 +1,9 @@
 <template>
   <Card>
     <CardHeader>
-      <CardTitle></CardTitle>
+      <CardTitle>
+        <slot name="title"></slot>
+      </CardTitle>
       <CardDescription>
         <slot name="description"></slot>
       </CardDescription>

@@ -1,7 +1,16 @@
 <template>
+  <!-- <pre>
+    {{ newsItem }}
+  </pre> -->
   <PCard class="dark">
-    <template #description>
+    <template #title>
       {{ newsItem.titel }}
+    </template>
+    <template #description>
+      <PLocationDateTime 
+        :location="newsItem.gebied" 
+        :dateTime="newsItem.publicatiedatum"
+      />
     </template>
     <template #content>
       {{ getMaxChars(newsItem.introductie, 325) }}
