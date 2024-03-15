@@ -4,9 +4,11 @@
     <div class="card flex flex-col gap-2">
       <PNewsCard v-for="item in newsStore.newsItems" :news-item="item"/>
       <PIntersect :isLoading="isNewsLoading" @intersected="newsStore.getNews()"/>
-      <!-- <pre>
-        {{ newsStore.newsItems[0] }}
-      </pre> -->
+      <PCard class="dark">
+        <template #error>
+          Laatste item
+        </template>
+      </PCard>
     </div>
     
   </div>
@@ -14,9 +16,6 @@
 <script setup lang="ts">
 import { useNewsStore } from '@/stores/newsStore'
 const newsStore = useNewsStore()
-const isLoading = ref(false)
 const isNewsLoading = computed(() => newsStore.isLoading)
-  // onMounted(() => {
-  //   newsStore.getNews()
-  // })
+
 </script>

@@ -52,6 +52,7 @@ export const useNewsStore = defineStore('news', () => {
     query,
     newsItems,
     isLoading,
+    iterator,
     getNews
   }
 })

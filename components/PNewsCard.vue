@@ -1,7 +1,7 @@
 <template>
   <PCard class="dark md:opacity-90 md:hover:opacity-100">
     <template #image>
-      <img :src="imageUrl" alt="newsItem.titel" class="min-w-44" />
+      <PNewsImage :imageUrl="imageUrl" />
     </template>
     <template #title>
       {{ newsItem.titel }}
@@ -13,14 +13,14 @@
       />
     </template>
     <template #content>
-      {{ getMaxChars(newsItem.introductie, 325) }}
+      {{ newsItem.introductie }}
     </template>
   </PCard>
 </template>
 <script setup lang="ts">
   const imageUrl = computed(() => {
     const img = props.newsItem.afbeelding.url
-    return img !== '' ? img : '/default.png'
+    return img !== '' && !img.includes('burgernet') ? img : '/default.png'
   })
   const props = defineProps({
   newsItem: {

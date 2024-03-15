@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex flex-col">
     <div class="flex gap-4">
       <div class="flex gap-1">
         <MapPin class="size-5 text-muted-foreground" />
