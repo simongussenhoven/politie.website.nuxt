@@ -1,14 +1,22 @@
 <template>
   <PFilterbar/>
-  <div class="news-items flex flex-wrap justify-start mt-2">
-    <PNewsCard v-for="item in newsStore.newsItems" :news-item="item"/>
-    <Button @click="newsStore.getNews()">Hi</Button>
+  <div class="news-items flex mt-2 gap-2">
+    <div class="card flex flex-col gap-2">
+      <PNewsCard v-for="item in newsStore.newsItems" :news-item="item"/>
+      <PIntersect :isLoading="isNewsLoading" @intersected="newsStore.getNews()"/>
+      <!-- <pre>
+        {{ newsStore.newsItems[0] }}
+      </pre> -->
+    </div>
+    
   </div>
 </template>
 <script setup lang="ts">
 import { useNewsStore } from '@/stores/newsStore'
 const newsStore = useNewsStore()
-  onMounted(() => {
-    newsStore.getNews()
-  })
+const isLoading = ref(false)
+const isNewsLoading = computed(() => newsStore.isLoading)
+  // onMounted(() => {
+  //   newsStore.getNews()
+  // })
 </script>

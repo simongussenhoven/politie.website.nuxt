@@ -1,10 +1,10 @@
 <template>
-  <PCard class="dark max-w-100">
+  <PCard class="dark">
     <template #description>
       {{ newsItem.titel }}
     </template>
     <template #content>
-      {{ newsItem.introductie }}
+      {{ getMaxChars(newsItem.introductie, 325) }}
     </template>
   </PCard>
 </template>

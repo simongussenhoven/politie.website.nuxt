@@ -5,6 +5,6 @@ export const splitParagraphs = (string: string) => {
     })
 }
 
-export const getMaxChars = (string: string) => {
-    return string.length > 200 ? `${string.substring(0, 200)}...` : string
+export const getMaxChars = (string: string, length: number) => {
+    return string.length > length ? `${string.substring(0, length)}...` : string
 }

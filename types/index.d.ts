@@ -49,7 +49,7 @@ interface IIterator {
   offset: number,
 }
 
-interface INewsResponse extends _AsyncData<INewsResponseData> {
+interface INewsResponse {
   iterator: IIterator,
   nieuwsberichten: INewsItem[],
 }

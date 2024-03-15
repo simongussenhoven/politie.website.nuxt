@@ -5,36 +5,41 @@ import { defineStore } from 'pinia'
 
 export const useNewsStore = defineStore('news', () => {
   const query = ref('Amsterdam')
-  const iterator = ref({} as IIterator)
-  const newsItems = ref([] as INewsItem[])
+  const iterator = ref({}) as any
+  const newsItems = ref([])
   const radius = ref(5.0)
   const maxNumberOfItems = ref(10)
-  const offset = ref(0)
+  const isLoading = ref(false)
 
   const getNews = async () => {
     if (iterator.value.last) return
     // create request object
-    const request = {
+    const params = {
       query: query.value,
       radius: radius.value,
       maxNumberOfItems: maxNumberOfItems.value,
       offset: newsItems.value.length
     }
-
+    const request = '/api/getNews' + objectToQueryParams(params)
+    isLoading.value = true
     try {
-      const response: INewsResponse = await $fetch(`api/getNews${objectToQueryParams(request)}`, {
-        method: 'GET',
-      })
+      const response = await $fetch(request)
+      console.log(response)
+      //@ts-expect-error
       iterator.value = response.iterator
-      newsItems.value = [...newsItems.value, ...response.nieuwsberichten]
-    } catch (error) {
+      //@ts-expect-error
+      newsItems.value = newsItems.value.concat(response.nieuwsberichten)
+    } catch(error) {
       console.error(error)
+    } finally {
+      isLoading.value = false
     }
   }
 
   return {
     query,
     newsItems,
+    isLoading,
     getNews
   }
 })
