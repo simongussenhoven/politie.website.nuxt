@@ -7,8 +7,7 @@ export default defineEventHandler(async (event) => {
   const url = `${baseUrl}${objectToQueryParams(params)}`
 
   try {
-    const response = await fetch(url)
-    return response.json() as INewsResponse
+    return await fetch(url)
   }
   catch (error) {
     return {error}
