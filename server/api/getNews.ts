@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   const url = `${baseUrl}${objectToQueryParams(params)}`
 
   try {
-    return await fetch(url)
+    return (await fetch(url)).json()
   }
   catch (error) {
     return {error}
