@@ -8,8 +8,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const response = await fetch(url)
-    return response.json()
-    return {}
+    return response.json() as INewsResponse
   }
   catch (error) {
     return {error}

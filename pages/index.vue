@@ -2,13 +2,10 @@
   <PFilterbar v-model:query="newsStore.query"/>
   <div class="news-items flex mt-2 gap-2">
     <div class="card flex flex-col gap-2">
-      <PNewsCard v-for="item in newsStore.newsItems" :news-item="item"/>
+      <NuxtLink :to="`/news/${item.uid}`" v-for="item in newsStore.newsItems" >
+        <PNewsCard :news-item="item"/>
+      </NuxtLink>
       <PIntersect :isLoading="isNewsLoading" @intersected="newsStore.getNews()"/>
-      <PCard class="dark">
-        <template #error>
-          Laatste item
-        </template>
-      </PCard>
     </div>
     
   </div>

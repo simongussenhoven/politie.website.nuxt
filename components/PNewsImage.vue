@@ -1,6 +1,6 @@
 <template>
   <div class="skeleton min-w-44" v-if="isLoading"></div>
-  <img v-else :src="props.imageUrl" alt="newsItem.titel" class="min-w-44 rounded-t" />
+  <img v-else :src="props.imageUrl" alt="newsItem.titel" class="w-100 md:min-w-44 md:max-w-44 rounded-t md:rounded-l" />
 </template>
 <script setup lang="ts">
   const props = defineProps({
