@@ -6,8 +6,8 @@ import { defineStore } from 'pinia'
 export const useNewsStore = defineStore('news', () => {
   const query = ref('Amsterdam')
   const iterator = ref({}) as any
-  const newsItem = ref(null)
-  const newsItems = ref([])
+  const newsItem = ref({} as INewsItem | null)
+  const newsItems = ref([] as INewsItem[])
   const radius = ref(5.0)
   const maxNumberOfItems = ref(10)
   const isLoading = ref(false)
@@ -36,11 +36,9 @@ export const useNewsStore = defineStore('news', () => {
     const request = '/api/getNews' + objectToQueryParams(params)
     isLoading.value = true
     try {
-      const response = await $fetch(request)
+      const response = await $fetch(request) as INewsResponse
       console.log(response)
-      //@ts-expect-error
       iterator.value = response.iterator
-      //@ts-expect-error
       newsItems.value = newsItems.value.concat(response.nieuwsberichten)
     } catch(error) {
       console.error(error)

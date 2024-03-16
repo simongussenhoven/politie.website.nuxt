@@ -13,7 +13,7 @@
         Meer info
       </template>
       <template #content>
-        <div class="pars" v-for="par in newsStore.newsItem.alineas" :key="par.id" v-html="sanitizeHtml(par.opgemaaktetekst)"/>
+        <div class="pars" v-for="par in newsStore.newsItem.alineas" v-html="sanitizeHtml(par.opgemaaktetekst)"/>
       </template>
     </PCard>
   </div>
