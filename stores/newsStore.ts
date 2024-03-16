@@ -5,15 +5,20 @@ import { defineStore } from 'pinia'
 
 export const useNewsStore = defineStore('news', () => {
   const query = ref('Amsterdam')
-  const iterator = ref({}) as any
+  const iterator = ref(null as IIterator | null)
   const newsItem = ref({} as INewsItem | null)
   const newsItems = ref([] as INewsItem[])
+
+  const regionQuery = ref('Amsterdam')
+  const regionIterator = ref(null as IIterator | null)
+  const regionalNewsItems = ref([] as INewsItem[])
+
   const radius = ref(5.0)
   const maxNumberOfItems = ref(10)
   const isLoading = ref(false)
 
   const debounce = _debounce(() => {
-    iterator.value = {}
+    iterator.value = null
     newsItems.value = []
     getNews()
   }, 1750)
@@ -25,8 +30,7 @@ export const useNewsStore = defineStore('news', () => {
 
   const getNews = async () => {
     debounce.cancel()
-    if (iterator.value.last) return
-    // create request object
+    if (iterator.value?.last) return
     const params = {
       query: query.value,
       radius: radius.value,
@@ -36,8 +40,7 @@ export const useNewsStore = defineStore('news', () => {
     const request = '/api/getNews' + objectToQueryParams(params)
     isLoading.value = true
     try {
-      const response = await $fetch(request) as INewsResponse
-      console.log(response)
+      const response: any = await $fetch(request)
       iterator.value = response.iterator
       newsItems.value = newsItems.value.concat(response.nieuwsberichten)
     } catch(error) {
@@ -47,16 +50,28 @@ export const useNewsStore = defineStore('news', () => {
     }
   }
 
-  const getNewsById = async (uid: string) => {
+  const getNewsItemById = async (uid: string) => {
     const request = '/api/getNews' + objectToQueryParams({uid})
-    console.log(request)
     isLoading.value = true
     try {
-      const response = await $fetch(request)
-      //@ts-expect-error
+      const response: any = await $fetch(request)
       newsItem.value = response.nieuwsberichten[0]
-      console.log(response)
       return response
+    } catch(error) {
+      console.error(error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const getNewsByRegion = async (region: string) => {
+    if (regionIterator.value?.last) return
+    const request = '/api/getNews' + objectToQueryParams({query: region})
+    isLoading.value = true
+    try {
+      const response: any = await $fetch(request)
+      iterator.value = response.iterator
+      regionalNewsItems.value = regionalNewsItems.value.concat(response.nieuwsberichten)
     } catch(error) {
       console.error(error)
     } finally {
@@ -68,9 +83,13 @@ export const useNewsStore = defineStore('news', () => {
     query,
     newsItem,
     newsItems,
+    regionQuery,
+    regionIterator,
+    regionalNewsItems,
     isLoading,
     iterator,
     getNews,
-    getNewsById
+    getNewsItemById,
+    getNewsByRegion
   }
 })

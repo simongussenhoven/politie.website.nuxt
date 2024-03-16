@@ -5,7 +5,7 @@
       <NuxtLink :to="`/news/${item.uid}`" v-for="item in newsStore.newsItems" >
         <PNewsCard :news-item="item"/>
       </NuxtLink>
-      <PIntersect :isLoading="isNewsLoading" @intersected="newsStore.getNews()"/>
+      <PIntersect :isLoading="isNewsLoading" @intersected="newsStore.getNews()" :isLast="newsStore.iterator?.last"/>
     </div>
     
   </div>

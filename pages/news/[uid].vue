@@ -1,7 +1,7 @@
 <template>
-
-  <div v-if="newsStore.newsItem" class="flex flex-col gap-2">
-    <!-- <pre>
+  
+    <div v-if="newsStore.newsItem" class="flex flex-col gap-2">
+<!-- <pre>
     {{ newsStore.newsItem }}
   </pre> -->
     <PNewsCard 
@@ -16,7 +16,7 @@
         <div class="pars" v-for="par in newsStore.newsItem.alineas" v-html="sanitizeHtml(par.opgemaaktetekst)"/>
       </template>
     </PCard>
-  </div>
+      </div>
   
 </template>
 
@@ -25,8 +25,8 @@ import sanitizeHtml from 'sanitize-html';
 const route = useRoute()
 const uid = String(route.params.uid)
 const newsStore = useNewsStore()
-newsStore.getNewsById(uid)
-
+newsStore.getNewsItemById(uid)
+  
 onUnmounted(() => {
   newsStore.newsItem = null
 })

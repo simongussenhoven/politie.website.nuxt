@@ -8,3 +8,7 @@ export const splitParagraphs = (string: string) => {
 export const getMaxChars = (string: string, length: number) => {
     return string.length > length ? `${string.substring(0, length)}...` : string
 }
+
+export const stripEmptyTags = (string: string) => {
+  return string.replace(/<[^/>][^>]*><\/[^>]+>/, "");
+}
