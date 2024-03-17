@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 // https://api.politie.nl/v4/nieuws?language=nl&query=drie%20personen&radius=5.0&maxnumberofitems=10&offset=0
 
 export const useNewsStore = defineStore('news', () => {
-  const query = ref('Amsterdam')
+  const query = ref('')
   const iterator = ref(null as IIterator | null)
   const newsItem = ref({} as INewsItem | null)
   const newsItems = ref([] as INewsItem[])
@@ -26,6 +26,11 @@ export const useNewsStore = defineStore('news', () => {
   watch(query, () => {
     debounce.cancel()
     debounce()  
+  })
+
+  watch(newsItem, (newItem) => {
+    if (!newItem) return
+    getRegionalNews()
   })
 
   const getNews = async () => {
@@ -64,9 +69,9 @@ export const useNewsStore = defineStore('news', () => {
     }
   }
 
-  const getNewsByRegion = async (region: string) => {
-    if (regionIterator.value?.last) return
-    const request = '/api/getNews' + objectToQueryParams({query: region})
+  const getRegionalNews = async () => {
+    if (regionIterator.value?.last || !newsItem.value?.gebied) return
+    const request = '/api/getNews' + objectToQueryParams({query: newsItem.value.gebied})
     isLoading.value = true
     try {
       const response: any = await $fetch(request)
@@ -90,6 +95,6 @@ export const useNewsStore = defineStore('news', () => {
     iterator,
     getNews,
     getNewsItemById,
-    getNewsByRegion
+    getRegionalNews
   }
 })

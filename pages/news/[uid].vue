@@ -1,9 +1,5 @@
 <template>
-  
-    <div v-if="newsStore.newsItem" class="flex flex-col gap-2">
-<!-- <pre>
-    {{ newsStore.newsItem }}
-  </pre> -->
+    <div v-if="newsStore.newsItem?.uid" class="flex flex-col gap-2">
     <PNewsCard 
       class="dark" 
       :news-item="newsStore.newsItem"
@@ -13,19 +9,33 @@
         Meer info
       </template>
       <template #content>
-        <div class="pars" v-for="par in newsStore.newsItem.alineas" v-html="sanitizeHtml(par.opgemaaktetekst)"/>
+        <div class="pars" v-for="par in newsStore.newsItem.alineas" v-html="sanitize(par.opgemaaktetekst)"/>
       </template>
     </PCard>
+    <div class="news-items flex mt-2 gap-2" v-if="newsStore.regionalNewsItems.length">
+      <div class="card flex flex-col gap-2 w-full">
+        <h2 class="text-3xl font-semibold leading-none tracking-tight mb-3" >Meer nieuws uit de regio {{ newsStore.newsItem.gebied }}</h2>
+        
+        <NuxtLink :to="`/news/${item.uid}`" v-for="item in newsStore.regionalNewsItems.filter((item) => item.uid !== uid )" >
+          <PNewsCard :news-item="item"/>
+        </NuxtLink>
+        <PIntersect :isLoading="newsStore.isLoading" @intersected="newsStore.getRegionalNews()" :isLast="newsStore.iterator?.last"/>
       </div>
+    </div>
+    </div>
   
 </template>
 
 <script setup lang="ts">
-import sanitizeHtml from 'sanitize-html';
 const route = useRoute()
 const uid = String(route.params.uid)
+
+
 const newsStore = useNewsStore()
-newsStore.getNewsItemById(uid)
+
+onMounted(() => {
+  newsStore.getNewsItemById(uid)
+})
   
 onUnmounted(() => {
   newsStore.newsItem = null

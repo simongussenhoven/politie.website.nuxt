@@ -1,7 +1,7 @@
 <template>
   <PFilterbar v-model:query="newsStore.query"/>
   <div class="news-items flex mt-2 gap-2">
-    <div class="card flex flex-col gap-2">
+    <div class="card flex flex-col gap-2 w-full">
       <NuxtLink :to="`/news/${item.uid}`" v-for="item in newsStore.newsItems" >
         <PNewsCard :news-item="item"/>
       </NuxtLink>

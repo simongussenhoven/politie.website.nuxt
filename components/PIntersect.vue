@@ -1,5 +1,5 @@
 <template>
-  <div class="loader">
+  <div class="loader py-3">
       <div v-show="!isLoading" ref="intersectionElement" />
       <span v-show="isLoading" class="loading-icon">
         <Loader class="size-6 text-muted-foreground" />
