@@ -1,3 +1,3 @@
 <template>
-  News!
+  Gezocht!
 </template>
