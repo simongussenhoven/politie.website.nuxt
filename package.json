@@ -21,6 +21,7 @@
     "sanitize-html": "^2.12.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "v-calendar": "^3.1.2",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
@@ -29,6 +30,7 @@
     "@nuxt/types": "^2.13.2",
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@types/sanitize-html": "^2.11.0",
+    "date-fns": "^3.6.0",
     "nuxt-lodash": "^2.5.3",
     "sass": "^1.72.0",
     "shadcn-nuxt": "^0.10.2",
