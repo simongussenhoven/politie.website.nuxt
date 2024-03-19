@@ -1,8 +1,14 @@
 import { defineNuxtConfig } from "nuxt/config"
 
 export default defineNuxtConfig({
+  runtimeConfig: {
+    // Will be available at runtime
+    public: {
+      googleMapApiKey: process.env.NUXT_GOOGLE_MAP_API_KEY || ''
+    }
+  },
   typescript: {
-      typeCheck : true
+    typeCheck: true
   },
   modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@pinia/nuxt', "@nuxt/image", "nuxt-lodash"],
   lodash: {

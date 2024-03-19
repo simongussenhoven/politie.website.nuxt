@@ -22,6 +22,10 @@
   person: {
     type: Object,
     required: true,
+    },
+  variant: {
+    type: String,
+    default: 'default',
   },
 })
 
