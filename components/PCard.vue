@@ -1,26 +1,25 @@
 <template>
-  <Card class="flex flex-col md:flex-row">
-    <slot v-if="$slots.image" name="image">
-    </slot>
-    <div class="flex-col">
-      <CardHeader>
-      <CardTitle v-if="$slots.title">
-        <slot name="title"></slot>
-      </CardTitle>
-      <CardDescription v-if="$slots.description">
-        <slot name="description"></slot>
-      </CardDescription>
-    </CardHeader>
-    <CardContent v-if="$slots.content">
-      <slot name="content"></slot>
-    </CardContent>
+  <Card class="card flex flex-col">
+    <div class="card-small-content flex flex-col md:flex-row">
+      <slot v-if="$slots.image" name="image" />
+      <div class="flex flex-col">
+        <CardHeader class="flex flex-col">
+          <!-- <slot v-if="$slots.image" name="image" /> -->
+          <CardTitle v-if="$slots.title">
+            <slot name="title"></slot>
+          </CardTitle>
+          <CardDescription v-if="$slots.description">
+            <slot name="description"></slot>
+          </CardDescription>
+        </CardHeader>
+        <CardContent v-if="$slots.content">
+          <slot name="content"></slot>
+        </CardContent>
+      </div>
+    </div>
     <CardFooter v-if="$slots.footer">
       <slot name="footer"></slot>
     </CardFooter>
-    <div class="error" v-if="$slots.error">
-      <slot name="error"></slot>
-    </div>
-    </div>
   </Card>
 </template>
 <script setup lang="ts">

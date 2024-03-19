@@ -1,11 +1,11 @@
 <template>
-  <div class="loader py-3">
+  <div class="loader py-3 flex justify-center">
       <div v-show="!isLoading" ref="intersectionElement" />
       <span v-show="isLoading" class="loading-icon">
         <PLoader/>
       </span>
       <span v-show="isLast">
-        <span class="text-muted-foreground">End of list</span>
+        <span class="text-muted-foreground">Einde van de lijst</span>
       </span>
   </div>
 </template>

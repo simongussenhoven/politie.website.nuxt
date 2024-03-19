@@ -15,18 +15,22 @@
     <template #content>
       {{ person.introductie }}
     </template>
+    <template v-if="large" #footer>
+      <PMissingCardExtra :person="person" />
+    </template>
   </PCard> 
 </template>
 <script setup lang="ts">
+import { ContactRound, MapPin } from 'lucide-vue-next'
   const props = defineProps({
   person: {
     type: Object,
     required: true,
     },
-  variant: {
-    type: String,
-    default: 'default',
-  },
+    large: {
+      type: Boolean,
+      default: false,
+    },
 })
 
 const imageUrl = computed(() => {
