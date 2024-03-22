@@ -1,5 +1,5 @@
 <template>
-  <Menubar class="dark">
+  <Menubar>
     <MenubarMenu>
       <MenubarTrigger>Filters</MenubarTrigger>
       <MenubarContent>

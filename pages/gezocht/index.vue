@@ -1,3 +1,3 @@
 <template>
-  Gezocht!
+  gezocht!
 </template>

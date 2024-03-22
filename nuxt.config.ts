@@ -7,10 +7,16 @@ export default defineNuxtConfig({
       googleMapApiKey: process.env.NUXT_GOOGLE_MAP_API_KEY || ''
     }
   },
+  devServer: {
+    port: 4000
+  },
   typescript: {
     typeCheck: true
   },
-  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@pinia/nuxt', "@nuxt/image", "nuxt-lodash"],
+  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/color-mode', 'shadcn-nuxt', '@pinia/nuxt', "@nuxt/image", "nuxt-lodash"],
+  colorMode: {
+    classSuffix: ''
+  },
   lodash: {
     prefix: "_",
     prefixSkip: ["string"],

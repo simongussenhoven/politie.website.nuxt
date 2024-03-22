@@ -13,16 +13,8 @@ import {
 </script>
 
 <template>
-  <NavigationMenu class="dark min-h-100 min-w-100 border mb-1">
+  <NavigationMenu class="nav min-w-full mb-1 flex justify-start">
     <NavigationMenuList>
-      <!-- <NavigationMenuItem>
-        <NavigationMenuTrigger>
-          Nieuws
-        </NavigationMenuTrigger>
-        <NavigationMenuContent>
-          <NavigationMenuLink>Vandaag</NavigationMenuLink>
-        </NavigationMenuContent>
-      </NavigationMenuItem> -->
       <NavigationMenuItem>
         <NuxtLink to="/">
           <NavigationMenuLink :class="navigationMenuTriggerStyle()">
@@ -36,14 +28,8 @@ import {
             Vermiste personen
           </NavigationMenuLink>
         </NuxtLink>
-      </NavigationMenuItem>
-      <!-- <NavigationMenuItem>
-        <NuxtLink to="/gezocht">
-          <NavigationMenuLink :class="navigationMenuTriggerStyle()">
-            Gezochte personen
-          </NavigationMenuLink>
-        </NuxtLink>
-      </NavigationMenuItem> -->
+      </NavigationMenuItem class="self-end">
+      <PThemeSelector/>
     </NavigationMenuList>
   </NavigationMenu>
 </template>

@@ -6,7 +6,7 @@
       <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
         <ContactRound />Signalement
       </h2>
-      <table class="table-auto bg-slate-900 rounded w-full border">
+      <table class="table-autoounded w-full border">
         <thead class="border">
           <th class="text-left p-4">Kenmerk</th>
           <th class="text-left">Waarde</th>

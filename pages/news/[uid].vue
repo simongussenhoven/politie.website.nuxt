@@ -1,10 +1,9 @@
 <template>
     <div v-if="newsStore.newsItem?.uid" class="flex flex-col gap-2">
-    <PNewsCard 
-      class="dark" 
+    <PNewsCard
       :news-item="newsStore.newsItem"
     />
-    <PCard class="dark">
+    <PCard>
       <template #title>
         Meer info
       </template>

@@ -3,7 +3,7 @@
     <SelectTrigger>
       <SelectValue :placeholder="placeholder" />
     </SelectTrigger>
-    <SelectContent class="dark">
+    <SelectContent>
       <SelectGroup>
         <SelectItem v-for="option in options" :value="option">
           {{ option }}

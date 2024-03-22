@@ -1,9 +1,8 @@
 <template>
-    <div class="app">
-      <div class="app-container min-h-screen bg-black text-white">
+    <div class="app bg-slate-100 dark:bg-slate-950">
         <NuxtLayout>
           <NuxtPage/>
         </NuxtLayout>
-      </div>
+        <PAlertDialog/>
     </div>
 </template>

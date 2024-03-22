@@ -1,5 +1,5 @@
 <template>
-  <PCard class="dark md:opacity-90 md:hover:opacity-100">
+  <PCard class="md:opacity-90 md:hover:opacity-100">
     <template #image>
       <PNewsImage :imageUrl="imageUrl" />
     </template>
