@@ -1,9 +1,6 @@
 import { defineNuxtConfig } from "nuxt/config"
 
 export default defineNuxtConfig({
-  app: {
-    pageTransition: { name: 'page', mode: 'out-in' }
-  },
   runtimeConfig: {
     // Will be available at runtime
     public: {
