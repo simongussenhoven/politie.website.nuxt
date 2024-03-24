@@ -1,5 +1,5 @@
 <template>
-  <NavigationMenu class="nav min-w-full sticky top-0">
+  <NavigationMenu class="nav min-w-full sticky bottom-0 md:bottom-auto md:top-0 bg-white dark:bg-slate-950 py-2">
     <NavigationMenuList class="flex justify-between">
       <div class="flex flex-row">
         <NavigationMenuItem>
