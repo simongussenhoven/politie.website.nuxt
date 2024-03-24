@@ -18,7 +18,7 @@
         <NuxtLink :to="`/news/${item.uid}`" v-for="item in regionalNews" >
           <PNewsCard :news-item="item"/>
         </NuxtLink>
-        <PIntersect :isLoading="newsStore.isLoading" @intersected="newsStore.getRegionalNews()" :isLast="newsStore.regionIterator?.last"/>
+        <PIntersect :isLoading="newsStore.isLoading" @intersected="newsRegionalStore.getRegionalNews()" :isLast="newsRegionalStore.iterator?.last"/>
       </div>
     </div>
     </div>
@@ -28,10 +28,14 @@
 <script setup lang="ts">
 const route = useRoute()
 const uid = String(route.params.uid)
+import {useNewsRegionalStore} from '@/stores/newsRegionalStore'
+import {useNewsStore} from '@/stores/newsStore'
+
 const newsStore = useNewsStore()
+const newsRegionalStore = useNewsRegionalStore()
 
 const regionalNews = computed(() => {
-  return newsStore.regionalNewsItems.filter((item) => item.uid !== uid)
+  return newsRegionalStore.regionalNewsItems.filter((item) => item.uid !== uid)
 })
 
 onMounted(() => {
@@ -40,7 +44,7 @@ onMounted(() => {
   
 onUnmounted(() => {
   newsStore.newsItem = null
-  newsStore.resetRegionalNews()
+  newsRegionalStore.resetRegionalNews()
 })
 </script>
 <style scoped lang="scss">

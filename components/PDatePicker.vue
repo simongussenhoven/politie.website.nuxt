@@ -35,13 +35,15 @@ import {
 const emit = defineEmits(['update:modelValue'])
 
 const props = withDefaults(defineProps<{
-  modelValue: Date,
-  placeholder: string
+  modelValue: Date | null,
+  placeholder?: string
 }>(), {
-  placeholder: 'Pick a date'
+  placeholder: 'Kies een datum'
 })
 
-watch(props.modelValue, (newValue) => {
+watch(() => props.modelValue, (newValue) => {
+  if (!props.modelValue) return
+  
   date.value = newValue
 })
 

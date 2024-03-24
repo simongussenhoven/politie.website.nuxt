@@ -3,13 +3,13 @@
     <AlertDialogContent>
       <AlertDialogHeader>
           <AlertDialogTitle>
-            {{ alertStore.title }}
+            {{ alertStore.alert.title }}
           </AlertDialogTitle>
-        <AlertDialogDescription v-html="alertStore.description"/>
+        <AlertDialogDescription v-html="alertStore.alert.description"/>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <!-- <AlertDialogCancel>Cancel</AlertDialogCancel> -->
-        <AlertDialogAction @click="onClickAccept">Accepteren</AlertDialogAction>
+        <AlertDialogCancel v-if="alertStore.alert.type === 'disclaimer'" @click="onClickHideForever">Niet meer laten zien</AlertDialogCancel>
+        <AlertDialogAction @click="onClickAccept">{{alertStore.alert.type === 'disclaimer' ? 'Accepteren': 'Ok'}}</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>
@@ -17,14 +17,28 @@
 
 <script setup lang="ts">
 import useAlertStore from '../stores/alertStore'
+
 const alertStore = useAlertStore()
-const isOpen = computed(() => alertStore.isOpen)
-const onClickAccept = () => {
-  alertStore.isOpen = false
+
+const onClickHideForever = () => {
   localStorage.setItem('hasAccepted', 'true')
+  onClickAccept()
+}
+
+const onClickAccept = () => {
+  alertStore.clearAlert()
+  alertStore.isOpen = false
 }
 onMounted(() => {
   if (!localStorage.getItem('hasAccepted')) {
+    alertStore.setAlert({
+      title: 'Belangrijke waarschuwing',
+      description: `Deze website gebruikt data van de open API van de politie.
+      Gebruik deze website niet voor officiële doeleinden. 
+      Meer info ovoer de API vind je <a href="https://www.politie.nl/binaries/content/assets/politie/onderwerpen/algemeen/politieapi.pdf" 
+      target="_blank">hier</a>.`,
+      type: 'disclaimer'
+    })
     alertStore.isOpen = true
   }
 })

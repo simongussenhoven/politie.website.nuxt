@@ -1,24 +1,15 @@
 <template>
   <Menubar class="border-none !h-12">
     <MenubarMenu>
-      <!-- <MenubarTrigger>Filters</MenubarTrigger>
-      <MenubarContent>
-        <MenubarItem>
-          New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-        </MenubarItem>
-        <MenubarItem>New Window</MenubarItem>
-        <MenubarSeparator />
-        <MenubarItem>Share</MenubarItem>
-        <MenubarSeparator />
-        <MenubarItem>Print</MenubarItem>
-      </MenubarContent> -->
       <PSearch v-model="newsStore.query" class="max-w-64" @keydown.enter="pressEnter"/>
+      <PDateRangePicker v-model="dateRange"/>
     </MenubarMenu>
   </Menubar>
 </template>
 
 <script setup lang="ts">
 import { useNewsStore } from '@/stores/newsStore'
+import {format} from 'date-fns'
 import {
   Menubar,
   MenubarContent,
@@ -32,6 +23,13 @@ import {
 const pressEnter = () => {
     newsStore.searchNews()
 }
+
+const dateRange = computed({
+  get: () => newsStore.dateRange,
+  set: (newValue) => {
+    newsStore.setDateRange(newValue)
+  },
+})
 
 const newsStore = useNewsStore()
 </script>

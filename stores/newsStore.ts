@@ -1,115 +1,172 @@
-import { objectToQueryParams } from "@/utils/api-helpers"
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
-// https://api.politie.nl/v4/nieuws?language=nl&query=drie%20personen&radius=5.0&maxnumberofitems=10&offset=0
+import { objectToQueryParams } from "@/utils/api-helpers";
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import useAlertStore from "./alertStore";
+import { format, subDays, subWeeks } from "date-fns";
 
-export const useNewsStore = defineStore('news', () => {
-  const query = ref('')
-  const iterator = ref(null as IIterator | null)
-  const newsItem = ref({} as INewsItem | null)
-  const newsItems = ref([] as INewsItem[])
+export const useNewsStore = defineStore("news", () => {
 
-  const regionQuery = ref('Amsterdam')
-  const regionIterator = ref(null as IIterator | null)
-  const regionalNewsItems = ref([] as INewsItem[])
+  const alertStore = useAlertStore();
+  const alert = computed(() => alertStore.alert);
+  const lastFetch = ref(new Date().getTime()); 
+  
+  const query = ref("");
+  const dateRange = ref({ start: subDays(new Date(), 1), end: new Date()})
+  const hasFilters = computed(() => !!query.value)
 
-  const radius = ref(5.0)
-  const maxNumberOfItems = ref(10)
-  const isLoading = ref(false)
+  const iterator = ref({last: false, offset: 0} as IIterator);
+  const newsItem = ref({} as INewsItem | null);
+  const newsItems = ref([] as INewsItem[]);
+  const radius = ref(5.0);
+  const maxNumberOfItems = ref(10);
+  const isLoading = ref(false);
 
-  const debounce = _debounce(() => {
+  const resetStore = () => {
+    query.value = "";
+    dateRange.value = { start: new Date(), end: new Date() };
+    iterator.value = { last: false, offset: 0 };
+    newsItem.value = null;
+    newsItems.value = [];
+    radius.value = 5.0;
+    maxNumberOfItems.value = 10;
+    isLoading.value = false;
+    getNews();
+  }
+  const findMore = () => {
+    dateRange.value.start = subWeeks(dateRange.value.start, 1)
     searchNews()
-  }, 1750)
+  }
+  // watch(lastFetch, () => {
+  //   if (new Date().getTime() - lastFetch.value < 200) {
+  //     alertStore.setAlert({
+  //       title: "Timeout",
+  //       description: "Te veel verzoeken",
+  //       type: "error",
+  //     });
+  //   }
+  // })
+  const clearFilters = () => {
+    query.value = "";
+    dateRange.value = { start: new Date(), end: new Date() };
+    resetIterator()
+    newsItems.value = [];
+    getNews();
+  }
+  const debounce = _debounce(() => {
+    searchNews();
+  }, 1750);
 
   watch(query, () => {
-    debounce.cancel()
-    debounce()
-  })
+    debounce.cancel();
+    debounce();
+  });
 
-  const searchNews = () => {
-    console.log('searchNews')
-    debounce.cancel()
-    iterator.value = null
-    newsItems.value = []
-    getNews()
+  // try to load again after error was cleared
+  watch(alert.value, () => {
+    if (alert.value.title !== "") {
+      resetStore()
+    };
+  });
+
+  const resetIterator = () => {
+    iterator.value = {
+      last: false,
+      offset: 0,
+    }
   }
+  const setDateRange = (range: {start:Date, end: Date}) => {
+    dateRange.value = range;
+    resetIterator()
+    newsItems.value = [];
+    getNews();
+  }
+  const searchNews = () => {
+    debounce.cancel();
+    resetIterator()
+    newsItems.value = [];
+    getNews();
+  };
 
-  watch(newsItem, (newItem) => {
-    if (!newItem) return
-    getRegionalNews()
-  })
+  const setStartDate= (date: string) => {
+    if (dateRange.value.end < new Date(date)) {
+      dateRange.value.end = new Date(date)
+    }
+    if(iterator.value.last) {
+      dateRange.value.start = subWeeks(new Date(date), 1)
+      iterator.value.last = false
+    }
+  }
+  const getNewsByScrolling = () => {
+    if (newsItems.value.length) {
+      setStartDate(newsItems.value[newsItems.value.length - 1].publicatiedatum)
+    }
+    getNews();
+  }
 
   const getNews = async () => {
-    debounce.cancel()
-    if (iterator.value?.last) return
-    const params = {
-      query: query.value,
-      radius: radius.value,
-      maxNumberOfItems: maxNumberOfItems.value,
-      offset: newsItems.value.length
-    }
-    const request = '/api/getNews' + objectToQueryParams(params)
-    isLoading.value = true
-    try {
-      const response: any = await $fetch(request)
-      iterator.value = response.iterator
-      newsItems.value = newsItems.value.concat(response.nieuwsberichten)
+    debounce.cancel();
+    if (iterator.value.last || alert.value.title || isLoading.value) return;
+    isLoading.value = true;
+
+    // create request
+    const request =
+      "/api/getNews" +
+      objectToQueryParams({
+        query: query.value,
+        radius: radius.value,
+        maxNumberOfItems: maxNumberOfItems.value,
+        offset: iterator.value.offset,
+        fromdate: format(dateRange.value.start, "yyyyMMdd"),
+        todate: format(dateRange.value.end, "yyyyMMdd"),
+      });
+
+    // get and catch error
+    const response: any = await $fetch(request)
+    if (response.error) {
+      alertStore.setAlert(response.error);
       return
-    } catch (error) {
-      console.error(error)
-    } finally {
-      isLoading.value = false
     }
-  }
+    // set values
+    iterator.value = {
+      last: response.iterator.last,
+      offset: response.iterator.offset + maxNumberOfItems.value
+    }
+    newsItems.value = newsItems.value.concat(response.nieuwsberichten);
+    lastFetch.value = new Date().getTime();
+    isLoading.value = false;
+  };
 
   const getNewsItemById = async (uid: string) => {
-    const request = '/api/getNews' + objectToQueryParams({ uid })
-    isLoading.value = true
+    const request = "/api/getNews" + objectToQueryParams({ uid });
+    isLoading.value = true;
     try {
-      const response: any = await $fetch(request)
-      newsItem.value = response.nieuwsberichten[0]
-      return response
+      const response: any = await $fetch(request);
+      newsItem.value = response.nieuwsberichten[0];
+      return response;
     } catch (error) {
-      console.error(error)
+      console.error(error);
+      alertStore.setAlert(error);
     } finally {
-      isLoading.value = false
+      isLoading.value = false;
     }
-  }
+  };
 
-  const getRegionalNews = async () => {
-    if (regionIterator.value?.last || !newsItem.value?.gebied) return
-    const request = '/api/getNews' + objectToQueryParams({ query: newsItem.value.gebied })
-    isLoading.value = true
-    try {
-      const response: any = await $fetch(request)
-      regionIterator.value = response.iterator
-      regionalNewsItems.value = regionalNewsItems.value.concat(response.nieuwsberichten)
-      return
-    } catch (error) {
-      console.error(error)
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const resetRegionalNews = () => {
-    regionIterator.value = null
-    regionalNewsItems.value = []
-  }
 
   return {
+    alert,
     query,
+    dateRange,
     newsItem,
     newsItems,
-    regionQuery,
-    regionIterator,
-    regionalNewsItems,
     isLoading,
     iterator,
+    hasFilters,
+    findMore,
+    clearFilters,
     getNews,
+    getNewsByScrolling,
     getNewsItemById,
-    getRegionalNews,
-    resetRegionalNews,
-    searchNews
-  }
-})
+    searchNews,
+    setDateRange
+  };
+});

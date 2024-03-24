@@ -1,5 +1,6 @@
 <template>
-  <NavigationMenu class="nav min-w-full sticky bottom-0 md:bottom-auto md:top-0 bg-white dark:bg-slate-950 py-2">
+  <div class="sticky bottom-0 md:bottom-auto md:top-0 bg-white dark:bg-slate-950 py-2">
+  <NavigationMenu class="nav min-w-full py-2">
     <NavigationMenuList class="flex justify-between">
       <div class="flex flex-row">
         <NavigationMenuItem>
@@ -20,8 +21,9 @@
       <PThemeSelector/>
     </NavigationMenuList>
   </NavigationMenu>
+  <PFilterbar/>
+  </div>
 </template>
-
 
 <script setup lang="ts">
 import {
@@ -35,6 +37,8 @@ import {
   NavigationMenuViewport,
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu'
+import { useNewsStore } from '@/stores/newsStore'
+const newsStore = useNewsStore()
 </script>
 
 <style lang="scss" scoped>

@@ -5,7 +5,7 @@
         <PLoader/>
       </span>
       <span v-show="isLast">
-        <span class="text-muted-foreground">Einde van de lijst</span>
+        <span class="text-muted-foreground">Einde van de lijst | <span @click="$emit('clearFilters')">Filters uitzetten</span> | <span @click="$emit('findMore')">Zoek verder terug</span></span>
       </span>
   </div>
 </template>
@@ -16,7 +16,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 
 export default {
   name: 'IntersectionObserverComponent',
-  emits: ['intersected'],
+  emits: ['intersected', 'clearFilters', 'findMore'],
   props: {
       options: {
           type: Object,
@@ -29,6 +29,10 @@ export default {
       isLast: {
           type: Boolean,
           default: false
+      },
+      hasFilters: {
+          type: Boolean,
+          default: false
       }
   },
   setup(props, { emit }) {
@@ -38,7 +42,7 @@ export default {
           entries.forEach((entry: any) => {
               if (entry.isIntersecting) {
                   // Element is intersecting, emit the "intersected" event
-                  if(props.isLoading) return;
+                  if(props.isLoading || props.hasFilters) return;
                   emit('intersected');
               }
           });
