@@ -1,7 +1,7 @@
 <template>
-  <PCard class="md:opacity-90 md:hover:opacity-100">
+  <PCard>
     <template #image>
-      <PNewsImage :imageUrl="imageUrl" />
+      <PNewsImage :imageUrl="imageUrl" class="hidden md:flex"/>
     </template>
     <template #title>
       {{ newsItem.titel }}
@@ -13,7 +13,10 @@
       />
     </template>
     <template #content>
-      {{ newsItem.introductie }}
+      <div>
+        <PNewsImage :imageUrl="imageUrl" class="max-w-20 md:hidden grow-0 float-right ml-2"/>
+        {{ newsItem.introductie }}
+      </div>
     </template>
   </PCard>
 </template>
