@@ -1,21 +1,27 @@
-import { defineNuxtConfig } from "nuxt/config"
+import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
   runtimeConfig: {
-    // Will be available at runtime
     public: {
-      googleMapApiKey: process.env.NUXT_GOOGLE_MAP_API_KEY || ''
-    }
+      googleMapApiKey: process.env.NUXT_GOOGLE_MAP_API_KEY || "",
+    },
   },
   devServer: {
-    port: 4000
+    port: 4000,
   },
   typescript: {
-    typeCheck: true
+    typeCheck: true,
   },
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/color-mode', 'shadcn-nuxt', '@pinia/nuxt', "@nuxt/image", "nuxt-lodash"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "@nuxtjs/color-mode",
+    "shadcn-nuxt",
+    "@pinia/nuxt",
+    "@nuxt/image",
+    "nuxt-lodash",
+  ],
   colorMode: {
-    classSuffix: ''
+    classSuffix: "",
   },
   lodash: {
     prefix: "_",
@@ -32,11 +38,11 @@ export default defineNuxtConfig({
     /**
      * Prefix for all the imported component
      */
-    prefix: '',
+    prefix: "",
     /**
      * Directory that the component lives in.
      * @default "./components/ui"
      */
-    componentDir: './components/ui'
+    componentDir: "./components/ui",
   },
-})
+});

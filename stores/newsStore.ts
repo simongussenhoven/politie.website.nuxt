@@ -18,15 +18,21 @@ export const useNewsStore = defineStore('news', () => {
   const isLoading = ref(false)
 
   const debounce = _debounce(() => {
-    iterator.value = null
-    newsItems.value = []
-    getNews()
+    searchNews()
   }, 1750)
 
   watch(query, () => {
     debounce.cancel()
     debounce()
   })
+
+  const searchNews = () => {
+    console.log('searchNews')
+    debounce.cancel()
+    iterator.value = null
+    newsItems.value = []
+    getNews()
+  }
 
   watch(newsItem, (newItem) => {
     if (!newItem) return
@@ -103,6 +109,7 @@ export const useNewsStore = defineStore('news', () => {
     getNews,
     getNewsItemById,
     getRegionalNews,
-    resetRegionalNews
+    resetRegionalNews,
+    searchNews
   }
 })
