@@ -3,16 +3,16 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import useAlertStore from "./alertStore";
 import { format, subDays, subWeeks } from "date-fns";
+import { get } from "@vueuse/core";
 
 export const useNewsStore = defineStore("news", () => {
-
-  const alertStore = useAlertStore();
-  const alert = computed(() => alertStore.alert);
-  const lastFetch = ref(new Date().getTime()); 
-  
   const query = ref("");
-  const dateRange = ref({ start: subDays(new Date(), 1), end: new Date()})
+  const lastFetch = ref(new Date().getTime()); 
   const hasFilters = computed(() => !!query.value)
+
+  const dateRange = ref({ start: subWeeks(new Date(), 1), end: new Date()})
+  const dateRangeModifier = ref('scroller')
+  const searchByDate = ref(false)
 
   const iterator = ref({last: false, offset: 0} as IIterator);
   const newsItem = ref({} as INewsItem | null);
@@ -30,8 +30,10 @@ export const useNewsStore = defineStore("news", () => {
     radius.value = 5.0;
     maxNumberOfItems.value = 10;
     isLoading.value = false;
+    searchByDate.value = false;
     getNews();
   }
+  
   const findMore = () => {
     dateRange.value.start = subWeeks(dateRange.value.start, 1)
     searchNews()
@@ -45,6 +47,12 @@ export const useNewsStore = defineStore("news", () => {
   //     });
   //   }
   // })
+
+  watch(() => searchByDate, () => {
+    dateRange.value = { start: subWeeks(new Date(), 1), end: new Date() }
+    getNews()
+  })
+
   const clearFilters = () => {
     query.value = "";
     dateRange.value = { start: new Date(), end: new Date() };
@@ -52,20 +60,36 @@ export const useNewsStore = defineStore("news", () => {
     newsItems.value = [];
     getNews();
   }
+
+  // watch the query, debounce the search
+ 
   const debounce = _debounce(() => {
     searchNews();
   }, 1750);
-
   watch(query, () => {
     debounce.cancel();
     debounce();
   });
 
-  // try to load again after error was cleared
+  // watch the date range, search if changed
+
+
+  const setDateRange = (range: {start:Date, end: Date}) => {
+    dateRangeModifier.value = 'datePicker'
+    dateRange.value = range;
+    resetIterator()
+    newsItems.value = [];
+    getNews();
+  }
+
+  // watch the alert, retry load if closed
+  const alertStore = useAlertStore();
+  const alert = computed(() => alertStore.alert);
   watch(alert.value, () => {
     if (alert.value.title !== "") {
       resetStore()
     };
+    searchNews();
   });
 
   const resetIterator = () => {
@@ -74,12 +98,7 @@ export const useNewsStore = defineStore("news", () => {
       offset: 0,
     }
   }
-  const setDateRange = (range: {start:Date, end: Date}) => {
-    dateRange.value = range;
-    resetIterator()
-    newsItems.value = [];
-    getNews();
-  }
+
   const searchNews = () => {
     debounce.cancel();
     resetIterator()
@@ -88,9 +107,6 @@ export const useNewsStore = defineStore("news", () => {
   };
 
   const setStartDate= (date: string) => {
-    if (dateRange.value.end < new Date(date)) {
-      dateRange.value.end = new Date(date)
-    }
     if(iterator.value.last) {
       dateRange.value.start = subWeeks(new Date(date), 1)
       iterator.value.last = false
@@ -100,6 +116,7 @@ export const useNewsStore = defineStore("news", () => {
     if (newsItems.value.length) {
       setStartDate(newsItems.value[newsItems.value.length - 1].publicatiedatum)
     }
+    dateRangeModifier.value = 'scroller'
     getNews();
   }
 
@@ -117,7 +134,7 @@ export const useNewsStore = defineStore("news", () => {
         maxNumberOfItems: maxNumberOfItems.value,
         offset: iterator.value.offset,
         fromdate: format(dateRange.value.start, "yyyyMMdd"),
-        todate: format(dateRange.value.end, "yyyyMMdd"),
+        todate: format(dateRange.value.end, "yyyyMMdd")
       });
 
     // get and catch error
@@ -161,6 +178,7 @@ export const useNewsStore = defineStore("news", () => {
     isLoading,
     iterator,
     hasFilters,
+    searchByDate,
     findMore,
     clearFilters,
     getNews,
